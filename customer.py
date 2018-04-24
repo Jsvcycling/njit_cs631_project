@@ -82,15 +82,61 @@ def register():
 #-----------------------------
 @customer_bp.route('/profile', methods=['GET'])
 def show_profile():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
 
-@customer_bp.route('/profile/update', methods=['POST'])
+    c = db.cursor()
+    c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+    user = c.fetchone()
+    c.close()
+
+    if not user:
+        flash('An internal error occurred.')
+        return redirect('/')
+
+    return render_template('customer/profile.html', user=user)
+
+@customer_bp.route('/profile/update', methods=['GET', 'POST'])
 def update_profile():
-    pass
+    if request.method == 'GET':
+        c = db.cursor()
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user=c.fetchone()
+        c.close()
 
-@customer_bp.route('/profile/delete', methods=['POST'])
+        if not user:
+            flash('An internal error occured.')
+            return redirect('/')
+        
+        return render_template('customer/update.html', user=user)
+    else:
+        c = db.cursor()
+        
+        c.execute('UPDATE customer SET FName=?, LName=?, Email=? WHERE CID=?', (
+            request.form['first_name'],
+            request.form['last_name'],
+            request.form['email'],
+            session['cid'],
+        ))
+        
+        db.commit()
+        c.close()
+
+        flash('Profile successfully updated.')
+        return redirect('/profile')
+
+@customer_bp.route('/profile/delete', methods=['GET'])
 def delete_profile():
-    pass
+    c = db.cursor()
+    c.execute('DELETE FROM customer WHERE CID=?', (session['cid'],))
+    db.commit()
+    c.close()
+
+    session.pop('cid', None)
+    
+    flash('User account has been successfully deleted.')
+    return redirect('/')
 
 #-----------------------------
 #

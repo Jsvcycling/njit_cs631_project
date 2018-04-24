@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Profile Information</h1>
+
+  <table>
+    <tr>
+      <td>Name:</td>
+      <td>{{ user['FName'] }} {{ user['LName'] }}</td>
+    </tr>
+    <tr>
+      <td>Email:</td>
+      <td>{{ user['Email'] }}</td>
+    </tr>
+    <tr>
+      <td>Class:</td>
+      <td>{{ user['Status'] }}</td>
+    </tr>
+  </table>
+
+  <br /><br />
+  
+  <a class="btn btn-outline-warning" href="/profile/update" role="button">Update Profile</a>
+  <a class="btn btn-outline-danger" href="/profile/delete" role="button">Delete Profile</a>
+{% endblock %}
