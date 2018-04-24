@@ -2,16 +2,24 @@
 {% block content %}
   <h1>Update Profile</h1>
 
+  <br />
+
   <form method="POST">
-    <label for="first_name">First Name</label>
-    <input type="text" name="first_name" id="first_name" value="{{ user['FName'] }}">
+    <div class="form-group row">
+      <label for="first_name" class="col-2">First Name</label>
+      <input type="text" name="first_name" id="first_name" class="form-control col-4" value="{{ user['FName'] }}">
+    </div>
 
-    <label for="last_name">Last Name</label>
-    <input type="text" name="last_name" id="last_name" value="{{ user['LName'] }}">
+    <div class="form-group row">
+      <label for="last_name" class="col-2">Last Name</label>
+      <input type="text" name="last_name" id="last_name" class="form-control col-4" value="{{ user['LName'] }}">
+    </div>
 
-    <label for="email">Email Address</label>
-    <input type="email" name="email" id="email" value="{{ user['Email'] }}">
+    <div class="form-group row">
+      <label for="email" class="col-2">Email Address</label>
+      <input type="email" name="email" id="email" class="form-control col-4" value="{{ user['Email'] }}">
+    </div>
 
-    <input type="submit" value="Update Profile">
+    <button type="submit" class="btn btn-primary">Update</button>
   </form>
 {% endblock %}

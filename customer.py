@@ -168,16 +168,16 @@ def delete_address():
 def list_cards():
     pass
 
-@customer_bp.route('/profile/cards/new', methods=['POST'])
+@customer_bp.route('/profile/cards/new', methods=['GET', 'POST'])
 def create_card():
     pass
 
-@customer_bp.route('/profile/cards/update', methods=['POST'])
+@customer_bp.route('/profile/cards/update', methods=['GET', 'POST'])
 def update_card():
     pass
 
-@customer_bp.route('/profile/cards/delete', methods=['POST'])
-def delete_card():
+@customer_bp.route('/profile/cards/delete/<cc_number>', methods=['GET'])
+def delete_card(cc_number):
     pass
 
 #-----------------------------
