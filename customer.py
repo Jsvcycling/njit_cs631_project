@@ -19,7 +19,7 @@ def index():
         user = c.fetchone()
         c.close()
         
-    return render_template('customer/index.html', user = user)
+    return render_template('customer/index.html', user=user)
 
 @customer_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -43,12 +43,37 @@ def login():
 
 @customer_bp.route('/logout', methods=['GET'])
 def logout():
-    session.pop('username', None)
+    session.pop('cid', None)
     return redirect('/')
 
 @customer_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    pass
+    if 'cid' in session:
+        return redirect('/')
+
+    if request.method == 'GET':
+        return render_template('customer/register.html')
+    else:
+        c = db.cursor()
+        
+        c.execute('INSERT INTO customer (FName, LName, Email) VALUES (?, ?, ?)', (
+            request.form['first_name'],
+            request.form['last_name'],
+            request.form['email'],
+        ))
+        
+        db.commit()
+
+        c.execute('SELECT CID FROM customer WHERE Email=?', (request.form['email'],))
+        user = c.fetchone()
+        c.close()
+
+        if user:
+            session['cid'] = user['CID']
+            return redirect('/')
+        else:
+            flash('An error occurred. Please try again.')
+            return render_template('customer/register.html')
 
 #-----------------------------
 #
