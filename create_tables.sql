@@ -1,11 +1,16 @@
+--############################
+--
+-- Notes:
+--  - Removed address field from customer and credit_card as it's not used.
+--
+--############################
+
 -- CUSTOMER table.
 CREATE TABLE customer (
   CID INTEGER PRIMARY KEY AUTOINCREMENT,
   FName TEXT DEFAULT '',
   LName TEXT DEFAULT '',
   Email TEXT UNIQUE NOT NULL,
-  Address TEXT DEFAULT '',
-  Phone TEXT DEFAULT '',
   Status TEXT DEFAULT 'R'
 );
 
@@ -36,7 +41,6 @@ CREATE TABLE credit_card (
   SecNumber NUMERIC NOT NULL,
   OwnerName TEXT NOT NULL,
   CCType TEXT NOT NULL,
-  CCAddress TEXT NOT NULL,
   CCDate NUMERIC NOT NULL
 );
 
