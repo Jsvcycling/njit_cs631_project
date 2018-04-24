@@ -21,40 +21,13 @@ from statistics import statistics_bp
 # The Flask app.
 app = Flask(__name__)
 
-# App configuration
-app.config.from_object(__name__)
-app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'cs631.db')
-))
+with app.app_context():
+    # App configuration
+    app.config.from_object(__name__)
 
-db_connect()
+    app.secret_key = 'hello-world'
 
-# Register the blueprints.
-app.register_blueprint(customer_bp)
-app.register_blueprint(product_bp, url_prefix='/products')
-app.register_blueprint(statistics_bp, url_prefix='/statistics')
-
-def db_connect():
-    exists = False
-    
-    if os.path.join(app.config['DATABASE']):
-        exists = True
-
-    g.db = sqlite3.connect(app.config['DATABASE'])
-    g.db.row_factory = sqlite3.Row
-
-    if not exists:
-        with app.open_resource('create_tables.sql', mode='r') as f:
-            g.db.cursor().executescript(f.read())
-
-        g.db.commit()
-
-        with app.open_resource('populate_tables.sql', mode='r') as f:
-            g.db.cursor().executescript(f.read())
-
-        g.db.commit()
-
-@app.teardown_appcontext
-def close_db():
-    if hasattr(g, 'db'):
-        g.db.close()
+    # Register the blueprints.
+    app.register_blueprint(customer_bp)
+    app.register_blueprint(product_bp, url_prefix='/products')
+    app.register_blueprint(statistics_bp, url_prefix='/statistics')

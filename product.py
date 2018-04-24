@@ -12,6 +12,6 @@ product_bp = Blueprint('product_bp', __name__)
 def list_products():
     pass
 
-@product_bp.route('/<product_id:int>', methods=['GET'])
+@product_bp.route('/<int:product_id>', methods=['GET'])
 def show_product(product_id):
     pass

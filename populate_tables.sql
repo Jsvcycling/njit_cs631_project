@@ -1,11 +1,11 @@
 -- CUSTOMER sample data.
 INSERT INTO customer VALUES
-  (1, 'Juana', 'Smith', 'juana.smith@example.com', '862-555-1234', 'Regular'),
-  (2, 'Joseph', 'Cowen', 'joseph.cowen@example.com', '973-555-5678', 'Regular'),
-  (3, 'Anita', 'Boudreaux', 'anita.bourdreaux@example.com', '201-555-9012', 'Silver');
+  (1, 'Juana', 'Smith', 'juana.smith@example.com', 'Regular'),
+  (2, 'Joseph', 'Cowen', 'joseph.cowen@example.com', 'Regular'),
+  (3, 'Anita', 'Boudreaux', 'anita.bourdreaux@example.com', 'Silver');
 
 -- SILVER_AND_ABOVE sample data.
-INSERT INTO customer VALUES
+INSERT INTO silver_and_above VALUES
   (3, '10000');
 
 -- SHIPPING_ADDRESS sample data.

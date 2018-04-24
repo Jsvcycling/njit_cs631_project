@@ -1,4 +1,6 @@
-from flask import Blueprint, request, session, g
+from flask import Blueprint, request, session, render_template, redirect, url_for, flash
+
+from db import db
 
 # The customer-based routes.
 customer_bp = Blueprint('customer_bp', __name__)
@@ -10,11 +12,39 @@ customer_bp = Blueprint('customer_bp', __name__)
 #-----------------------------
 @customer_bp.route('/', methods=['GET'])
 def index():
-    pass
+    user = None
+    if 'cid' in session:
+        c = db.cursor()
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user = c.fetchone()
+        c.close()
+        
+    return render_template('customer/index.html', user = user)
 
 @customer_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    pass
+    if 'cid' in session:
+        return redirect('/')
+
+    if request.method == 'GET':
+        return render_template('customer/login.html')
+    else:
+        c = db.cursor()
+        c.execute('SELECT CID FROM customer where Email=?', (request.form['email'],))
+        user = c.fetchone()
+        c.close()
+
+        if user:
+            session['cid'] = user['CID']
+            return redirect('/')
+        else:
+            flash('User not found.')
+            return render_template('customer/login.html')
+
+@customer_bp.route('/logout', methods=['GET'])
+def logout():
+    session.pop('username', None)
+    return redirect('/')
 
 @customer_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -105,6 +135,6 @@ def update_basket():
 def list_orders():
     pass
 
-@customer_bp.route('/orders/<order_id:int>', methods=['GET'])
+@customer_bp.route('/orders/<int:order_id>', methods=['GET'])
 def show_order(order_id):
     pass
