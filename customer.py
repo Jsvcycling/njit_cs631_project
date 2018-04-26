@@ -269,7 +269,7 @@ def list_cards():
         return redirect('/login')
 
     c = db.cursor()
-    c.execute('SELECT * FROM credit_card NATURAL JOIN stored_card WHERE CID=?', (
+    c.execute('SELECT * FROM credit_card JOIN stored_card USING (CCNumber) WHERE CID=?', (
         session['cid'],
     ))
     cards = c.fetchall()
@@ -291,7 +291,7 @@ def create_card():
         user = c.fetchone()
         c.close()
 
-        return render_templte('customer/new_card.html', user=user)
+        return render_template('customer/new_card.html', user=user)
     else:
         c = db.cursor()
 
@@ -302,7 +302,7 @@ def create_card():
             request.form['cc_type'],
             request.form['cc_date'],
             ))
-        c.execute('INSERT INTO stored_card VALUES (? ?)', (
+        c.execute('INSERT INTO stored_card VALUES (?, ?)', (
             request.form['cc_number'],
             session['cid'],
         ))

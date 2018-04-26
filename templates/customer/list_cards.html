@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Manage Credit Cards</h1>
+
+  <br />
+
+  <a class="btn btn-primary" href="/profile/cards/new" role="button">New</a>
+
+  <br /><br />
+
+  {% if cards %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Number</th>
+          <th scope="col">CVC</th>
+          <th scope="col">Owner Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Expiration</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for card in cards %}
+          <tr>
+            <td>{{ card.CCNumber }}</td>
+            <td>{{ card.SecNumber }}</td>
+            <td>{{ card.OwnerName }}</td>
+            <td>{{ card.CCType }}</td>
+            <td>{{ card.CCDate }}</td>
+            <td>
+              <a class="btn btn-warning" href="/profile/cards/{{ card.CCNumber }}/update" role="button">Update</a>
+              <a class="btn btn-danger" href="/profile/cards/{{ card.CCNumber }}/delete" role="button">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Sorry, you don't currently have any credit cards saved.</p>
+  {% endif %}
+{% endblock %}
