@@ -264,19 +264,102 @@ def delete_address(name):
 #-----------------------------
 @customer_bp.route('/profile/cards', methods=['GET'])
 def list_cards():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    c = db.cursor()
+    c.execute('SELECT * FROM credit_card NATURAL JOIN stored_card WHERE CID=?', (
+        session['cid'],
+    ))
+    cards = c.fetchall()
+    c.execute('SELECT * FROM customer where CID=?', (session['cid'],))
+    user = c.fetchone()
+    c.close()
+
+    return render_template('customer/list_cards.html', cards=cards, user=user)
 
 @customer_bp.route('/profile/cards/new', methods=['GET', 'POST'])
 def create_card():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
 
-@customer_bp.route('/profile/cards/update', methods=['GET', 'POST'])
-def update_card():
-    pass
+    if request.method == 'GET':
+        c = db.cursor()
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user = c.fetchone()
+        c.close()
 
-@customer_bp.route('/profile/cards/delete/<cc_number>', methods=['GET'])
+        return render_templte('customer/new_card.html', user=user)
+    else:
+        c = db.cursor()
+
+        c.execute('INSERT INTO credit_card VALUES (?, ?, ?, ?, ?)', (
+            request.form['cc_number'],
+            request.form['cc_code'],
+            request.form['cc_owner'],
+            request.form['cc_type'],
+            request.form['cc_date'],
+            ))
+        c.execute('INSERT INTO stored_card VALUES (? ?)', (
+            request.form['cc_number'],
+            session['cid'],
+        ))
+        
+        db.commit()
+        c.close()
+
+        flash('Successfully added credit card.')
+        return redirect('/profile/cards')
+
+@customer_bp.route('/profile/cards/<cc_number>/update', methods=['GET', 'POST'])
+def update_card(cc_number):
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    if request.method == 'GET':
+        c = db.cursor()
+        c.execute('SELECT * FROM credit_card WHERE CCNumber=?', (cc_number,))
+        card = c.fetchone()
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user = c.fetchone()
+        c.close()
+
+        return render_template('customer/update_card.html', card=card, user=user)
+    else:
+        c = db.cursor()
+
+        c.execute('UPDATE credit_card SET SecNumber=?, OwnerName=?, CCType=?, CCDate=?', (
+            request.form['cc_code'],
+            request.form['cc_owner'],
+            request.form['cc_type'],
+            request.form['cc_date'],
+        ))
+
+        db.commit()
+        c.close()
+
+        flash('Successfully updatd credit card.')
+        return redirect('/profile/cards')
+
+@customer_bp.route('/profile/cards/<cc_number>/delete', methods=['GET'])
 def delete_card(cc_number):
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    c = db.cursor()
+    c.execute('DELETE FROM stored_card WHERE CID=? AND CCNumber=?', (
+        session['cid'],
+        cc_number,
+    ))
+    db.commit()
+    c.close()
+
+    flash('Successfully deleted credit card.')
+    return redirect('profile/cards')
 
 #-----------------------------
 #

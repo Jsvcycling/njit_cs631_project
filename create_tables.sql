@@ -42,7 +42,7 @@ CREATE TABLE credit_card (
   SecNumber TEXT NOT NULL,
   OwnerName TEXT NOT NULL,
   CCType TEXT NOT NULL,
-  CCDate NUMERIC NOT NULL
+  CCDate TEXT NOT NULL
 );
 
 -- STORED_CARD table.
