@@ -18,8 +18,11 @@ def index():
         c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
         user = c.fetchone()
         c.close()
+
+    if user:
+        return render_template('customer/profile.html', user=user)
         
-    return render_template('customer/index.html', user=user)
+    return render_template('customer/index.html')
 
 @customer_bp.route('/login', methods=['GET', 'POST'])
 def login():
