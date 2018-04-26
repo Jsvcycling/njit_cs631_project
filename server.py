@@ -31,3 +31,6 @@ with app.app_context():
     app.register_blueprint(customer_bp)
     app.register_blueprint(product_bp, url_prefix='/products')
     app.register_blueprint(statistics_bp, url_prefix='/statistics')
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=5000, debug=True)
