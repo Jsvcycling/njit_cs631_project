@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Manage Shipping Addresses</h1>
+
+  <br />
+
+  <a class="btn btn-primary" href="/profile/addresses/new" role="button">New</a>
+
+  <br /><br />
+
+  {% if addrs %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Recipient Name</th>
+          <th scope="col">Address</th>
+          <th scope="col">City</th>
+          <th scope="col">State</th>
+          <th scope="col">ZIP Code</th>
+          <th scope="col">Country</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for addr in addrs %}
+          <tr>
+            <td>{{ addr.SAName }}</td>
+            <td>{{ addr.RecipientName }}</td>
+            <td>{{ addr.SNumber }} {{ addr.Street }}</td>
+            <td>{{ addr.City }}</td>
+            <td>{{ addr.State }}</td>
+            <td>{{ addr.Zip }}</td>
+            <td>{{ addr.Country }}</td>
+            <td>
+              <a class="btn btn-warning" href="/profile/addresses/{{ addr.SAName }}/update" role="button">Update</a>
+              <a class="btn btn-danger" href="/profile/addresses/{{ addr.SAName }}/delete" role="button">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Sorry, you don't currently have any shipping addresses.</p>
+  {% endif %}
+{% endblock %}

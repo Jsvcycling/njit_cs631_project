@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Update Shipping Address</h1>
+
+  <br />
+
+  <form method="POST">
+    <div class="form-group row">
+      <label for="name" class="col-2">Name</label>
+      <input type="text" name="name" id="name" class="form-control col-4" value="{{ addr.SAName }}" readonly>
+    </div>
+
+    <div class="form-group row">
+      <label for="recipient_name" class="col-2">Recipient Name</label>
+      <input type="text" name="recipient_name" id="recipient_name" class="form-control col-4" value="{{ addr.RecipientName }}">
+    </div>
+
+    <div class="form-group row">
+      <label for="house_num" class="col-2">House Number</label>
+      <input type="number" name="house_num" id="house_num" class="form-control col-4" value="{{ addr.SNumber }}">
+    </div>
+    
+    <div class="form-group row">
+      <label for="street" class="col-2">Street</label>
+      <input type="text" name="street" id="street" class="form-control col-4" value="{{ addr.Street }}">
+    </div>
+    
+    <div class="form-group row">
+      <label for="city" class="col-2">City</label>
+      <input type="text" name="city" id="city" class="form-control col-4" value="{{ addr.City }}">
+    </div>
+    
+    <div class="form-group row">
+      <label for="state" class="col-2">State</label>
+      <input type="text" name="state" id="state" class="form-control col-4" value="{{ addr.State }}">
+    </div>
+    
+    <div class="form-group row">
+      <label for="zip_code" class="col-2">ZIP Code</label>
+      <input type="number" name="zip_code" id="zip_code" class="form-control col-4" value="{{ addr.Zip }}">
+    </div>
+    
+    <div class="form-group row">
+      <label for="country" class="col-2">Country</label>
+      <input type="text" name="country" id="country" class="form-control col-4" value="{{ addr.Country }}">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Update Shipping Address</button>
+  </form>
+{% endblock %}

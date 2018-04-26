@@ -10,21 +10,21 @@ INSERT INTO silver_and_above VALUES
 
 -- SHIPPING_ADDRESS sample data.
 INSERT INTO shipping_address VALUES
-  (1, 'Home', 'J. Smith', 'N. First Street.', 149, 'Newark', 'NJ', 07104, 'USA'),
-  (1, 'Work', 'ATTN: Juana Smith', 'Washington St.', 12, 'Newark', 'NJ', 07102, 'USA');
+  (1, 'Home', 'J. Smith', 'N. First Street.', 149, 'Newark', '07104', 'NJ', 'USA'),
+  (1, 'Work', 'ATTN: Juana Smith', 'Washington St.', 12, 'Newark', '07102', 'NJ', 'USA');
 
 -- CREDIT_CARD sample data.
 INSERT INTO credit_card VALUES
-  (234567890123, 234, 'Joseph Cowen', 'MasterCard', 1587769200),
-  (123456789012, 123, 'Juana Smith', 'Visa', 1587686400);
+  ('234567890123', '234', 'Joseph Cowen', 'MasterCard', 1587769200),
+  ('123456789012', '123', 'Juana Smith', 'Visa', 1587686400);
 
 -- STORED_CARD sample data.
 INSERT INTO stored_card VALUES
-  (123456789012, 1);
+  ('123456789012', 1);
 
 -- CART sample data.
 INSERT INTO cart VALUES
-  (1, 1, 'Home', 123456789012, 'Open', NULL);
+  (1, 1, 'Home', '123456789012', 'Open', NULL);
 
 -- PRODUCT sample data.
 INSERT INTO product VALUES

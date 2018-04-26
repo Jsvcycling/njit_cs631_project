@@ -55,13 +55,11 @@ def register():
         return render_template('customer/register.html')
     else:
         c = db.cursor()
-        
         c.execute('INSERT INTO customer (FName, LName, Email) VALUES (?, ?, ?)', (
             request.form['first_name'],
             request.form['last_name'],
             request.form['email'],
         ))
-        
         db.commit()
 
         c.execute('SELECT CID FROM customer WHERE Email=?', (request.form['email'],))
@@ -99,6 +97,10 @@ def show_profile():
 
 @customer_bp.route('/profile/update', methods=['GET', 'POST'])
 def update_profile():
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+    
     if request.method == 'GET':
         c = db.cursor()
         c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
@@ -128,6 +130,10 @@ def update_profile():
 
 @customer_bp.route('/profile/delete', methods=['GET'])
 def delete_profile():
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+    
     c = db.cursor()
     c.execute('DELETE FROM customer WHERE CID=?', (session['cid'],))
     db.commit()
@@ -145,19 +151,108 @@ def delete_profile():
 #-----------------------------
 @customer_bp.route('/profile/addresses', methods=['GET'])
 def list_addresses():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
 
-@customer_bp.route('/profile/addresses/new', methods=['POST'])
+    c = db.cursor()
+    c.execute('SELECT * FROM shipping_address WHERE CID=?', (session['cid'],))
+    addrs = c.fetchall()
+    c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+    user = c.fetchone()
+    c.close()
+
+    return render_template('customer/list_addresses.html', addrs=addrs, user=user)
+
+@customer_bp.route('/profile/addresses/new', methods=['GET', 'POST'])
 def create_address():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
 
-@customer_bp.route('/profile/addresses/update', methods=['POST'])
-def update_address():
-    pass
+    if request.method == 'GET':
+        c = db.cursor()
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user = c.fetchone()
+        c.close()
 
-@customer_bp.route('/profile/addresses/delete', methods=['POST'])
-def delete_address():
-    pass
+        return render_template('customer/new_address.html', user=user)
+    else:
+        c = db.cursor()
+
+        c.execute('INSERT INTO shipping_address VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', (
+            session['cid'],
+            request.form['name'],
+            request.form['recipient_name'],
+            request.form['street'],
+            request.form['house_num'],
+            request.form['city'],
+            request.form['zip_code'],
+            request.form['state'],
+            request.form['country'],
+        ))
+
+        db.commit()
+        c.close()
+
+        flash('Successfully added shipping address.')
+        return redirect('/profile/addresses')
+
+@customer_bp.route('/profile/addresses/<name>/update', methods=['GET', 'POST'])
+def update_address(name):
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    if request.method == 'GET':
+        c = db.cursor()
+        c.execute('SELECT * FROM shipping_address WHERE CID=? AND SAName=?', (
+            session['cid'],
+            name,
+        ))
+        addr = c.fetchone()
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user = c.fetchone()
+        c.close()
+
+        return render_template('customer/update_address.html', addr=addr, user=user)
+    else:
+        c = db.cursor()
+
+        c.execute('UPDATE shipping_address SET RecipientName=?, Street=?, SNumber=?, City=?, Zip=?, State=?, Country=? WHERE CID=? AND SAName=?', (
+            request.form['recipient_name'],
+            request.form['street'],
+            request.form['house_num'],
+            request.form['city'],
+            request.form['zip_code'],
+            request.form['state'],
+            request.form['country'],
+            session['cid'],
+            name,
+        ))
+
+        db.commit()
+        c.close()
+
+        flash('Successfully updatd shipping address.')
+        return redirect('/profile/addresses')
+
+@customer_bp.route('/profile/addresses/<name>/delete', methods=['GET'])
+def delete_address(name):
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    c = db.cursor()
+    c.execute('DELETE FROM shipping_address WHERE CID=? AND SAName=?', (
+        session['cid'],
+        name,
+    ))
+    db.commit()
+    c.close()
+
+    flash('Successfully deleted shipping address.')
+    return redirect('profile/addresses')
 
 #-----------------------------
 #
