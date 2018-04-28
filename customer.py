@@ -1,4 +1,5 @@
-from flask import Blueprint, request, session, render_template, redirect, url_for, flash
+from flask import Blueprint, request, session, render_template, redirect, url_for, \
+    flash
 
 from db import db
 
@@ -33,7 +34,9 @@ def login():
         return render_template('customer/login.html')
     else:
         c = db.cursor()
-        c.execute('SELECT CID FROM customer where Email=?', (request.form['email'],))
+        c.execute('SELECT CID FROM customer where Email=?', (
+            request.form['email'],
+        ))
         user = c.fetchone()
         c.close()
 
@@ -58,14 +61,19 @@ def register():
         return render_template('customer/register.html')
     else:
         c = db.cursor()
-        c.execute('INSERT INTO customer (FName, LName, Email) VALUES (?, ?, ?)', (
+        c.execute("""
+        INSERT INTO customer (FName, LName, Email)
+        VALUES (?, ?, ?)
+        """, (
             request.form['first_name'],
             request.form['last_name'],
             request.form['email'],
         ))
         db.commit()
 
-        c.execute('SELECT CID FROM customer WHERE Email=?', (request.form['email'],))
+        c.execute('SELECT CID FROM customer WHERE Email=?', (
+            request.form['email'],
+        ))
         user = c.fetchone()
         c.close()
 
@@ -117,14 +125,16 @@ def update_profile():
         return render_template('customer/update.html', user=user)
     else:
         c = db.cursor()
-        
-        c.execute('UPDATE customer SET FName=?, LName=?, Email=? WHERE CID=?', (
+        c.execute("""
+        UPDATE customer SET FName=?, LName=?, Email=?, Phone=?
+        WHERE CID=?
+        """, (
             request.form['first_name'],
             request.form['last_name'],
             request.form['email'],
+            request.form['phone'],
             session['cid'],
         ))
-        
         db.commit()
         c.close()
 
@@ -183,7 +193,9 @@ def create_address():
     else:
         c = db.cursor()
 
-        c.execute('INSERT INTO shipping_address VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', (
+        c.execute("""
+        INSERT INTO shipping_address VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
             session['cid'],
             request.form['name'],
             request.form['recipient_name'],
@@ -222,7 +234,11 @@ def update_address(name):
     else:
         c = db.cursor()
 
-        c.execute('UPDATE shipping_address SET RecipientName=?, Street=?, SNumber=?, City=?, Zip=?, State=?, Country=? WHERE CID=? AND SAName=?', (
+        c.execute("""
+        UPDATE shipping_address SET RecipientName=?, Street=?, SNumber=?,
+        City=?, Zip=?, State=?, Country=?
+        WHERE CID=? AND SAName=?
+        """, (
             request.form['recipient_name'],
             request.form['street'],
             request.form['house_num'],
@@ -269,9 +285,10 @@ def list_cards():
         return redirect('/login')
 
     c = db.cursor()
-    c.execute('SELECT * FROM credit_card JOIN stored_card USING (CCNumber) WHERE CID=?', (
-        session['cid'],
-    ))
+    c.execute("""
+    SELECT * FROM credit_card JOIN stored_card USING (CCNumber)
+    WHERE CID=?
+    """, (session['cid'],))
     cards = c.fetchall()
     c.execute('SELECT * FROM customer where CID=?', (session['cid'],))
     user = c.fetchone()
@@ -295,11 +312,12 @@ def create_card():
     else:
         c = db.cursor()
 
-        c.execute('INSERT INTO credit_card VALUES (?, ?, ?, ?, ?)', (
+        c.execute('INSERT INTO credit_card VALUES (?, ?, ?, ?, ?, ?)', (
             request.form['cc_number'],
             request.form['cc_code'],
             request.form['cc_owner'],
             request.form['cc_type'],
+            request.form['cc_zip'],
             request.form['cc_date'],
             ))
         c.execute('INSERT INTO stored_card VALUES (?, ?)', (
@@ -321,7 +339,13 @@ def update_card(cc_number):
 
     if request.method == 'GET':
         c = db.cursor()
-        c.execute('SELECT * FROM credit_card WHERE CCNumber=?', (cc_number,))
+        c.execute("""
+        SELECT * FROM credit_card JOIN stored_card USING (CCNumber)
+        WHERE CCNumber=? AND CID=?
+        """, (
+            cc_number,
+            session['cid'],
+        ))
         card = c.fetchone()
         c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
         user = c.fetchone()
@@ -331,11 +355,16 @@ def update_card(cc_number):
     else:
         c = db.cursor()
 
-        c.execute('UPDATE credit_card SET SecNumber=?, OwnerName=?, CCType=?, CCDate=?', (
+        c.execute("""
+        UPDATE credit_card SET SecNumber=?, OwnerName=?, CCType=?, CCZip=?, CCDate=?
+        WHERE CCNumber=?
+        """, (
             request.form['cc_code'],
             request.form['cc_owner'],
             request.form['cc_type'],
+            request.form['cc_zip'],
             request.form['cc_date'],
+            cc_number,
         ))
 
         db.commit()

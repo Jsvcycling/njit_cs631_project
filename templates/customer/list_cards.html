@@ -16,6 +16,7 @@
           <th scope="col">CVC</th>
           <th scope="col">Owner Name</th>
           <th scope="col">Type</th>
+          <th scope="col">ZIP Code</th>
           <th scope="col">Expiration</th>
           <th scope="col">Actions</th>
         </tr>
@@ -28,6 +29,7 @@
             <td>{{ card.SecNumber }}</td>
             <td>{{ card.OwnerName }}</td>
             <td>{{ card.CCType }}</td>
+            <td>{{ card.CCZip }}</td>
             <td>{{ card.CCDate }}</td>
             <td>
               <a class="btn btn-warning" href="/profile/cards/{{ card.CCNumber }}/update" role="button">Update</a>

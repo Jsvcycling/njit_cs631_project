@@ -8,7 +8,7 @@ exists = False
 if os.path.exists(db_path):
     exists = True
     
-db = sqlite3.connect(db_path)
+db = sqlite3.connect(db_path, check_same_thread=False)
 db.row_factory = sqlite3.Row
 
 if not exists:

@@ -17,12 +17,17 @@
 
     <div class="form-group row">
       <label for="cc_owner" class="col-2">Owner Name</label>
-      <input type="number" name="cc_owner" id="cc_owner" class="form-control col-4" value="{{ card.OwnerName }}">
+      <input type="text" name="cc_owner" id="cc_owner" class="form-control col-4" value="{{ card.OwnerName }}">
     </div>
     
     <div class="form-group row">
       <label for="cc_type" class="col-2">Type</label>
       <input type="text" name="cc_type" id="cc_type" class="form-control col-4" value="{{ card.CCType }}">
+    </div>
+    
+    <div class="form-group row">
+      <label for="cc_zip" class="col-2">ZIP Code</label>
+      <input type="text" name="cc_zip" id="cc_zip" class="form-control col-4" value="{{ card.CCZip }}">
     </div>
     
     <div class="form-group row">

@@ -15,8 +15,8 @@ INSERT INTO shipping_address VALUES
 
 -- CREDIT_CARD sample data.
 INSERT INTO credit_card VALUES
-  ('234567890123', '234', 'Joseph Cowen', 'MasterCard', '01/2021'),
-  ('123456789012', '123', 'Juana Smith', 'Visa', '02/2021');
+  ('234567890123', '234', 'Joseph Cowen', 'MasterCard', '07109', '01/2021'),
+  ('123456789012', '123', 'Juana Smith', 'Visa', '07104', '02/2021');
 
 -- STORED_CARD sample data.
 INSERT INTO stored_card VALUES
