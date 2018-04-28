@@ -2,23 +2,25 @@
 {% block content %}
   <h1>Profile Information</h1>
 
-  <table>
-    <tr>
-      <td>Name:</td>
-      <td>{{ user['FName'] }} {{ user['LName'] }}</td>
-    </tr>
-    <tr>
-      <td>Email:</td>
-      <td>{{ user['Email'] }}</td>
-    </tr>
-    <tr>
-      <td>Phone:</td>
-      <td>{{ user['Phone'] }}</td>
-    </tr>
-    <tr>
-      <td>Class:</td>
-      <td>{{ user['Status'] }}</td>
-    </tr>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">Name:</th>
+        <td>{{ user['FName'] }} {{ user['LName'] }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Email:</th>
+        <td>{{ user['Email'] }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Phone:</th>
+        <td>{{ user['Phone'] }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Class:</th>
+        <td>{{ user['Status'] }}</td>
+      </tr>
+    </tbody>
   </table>
 
   <br /><br />
