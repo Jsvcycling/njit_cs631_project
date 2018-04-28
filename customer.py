@@ -397,14 +397,57 @@ def delete_card(cc_number):
 #-----------------------------
 @customer_bp.route('/basket', methods=['GET'])
 def show_basket():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
 
-@customer_bp.route('/basket/add', methods=['GET'])
+    c = db.cursor()
+    c.execute("""
+    SELECT * FROM product
+    JOIN appears_in ON product.PID = appears_in.PID
+    JOIN cart ON cart.CartID = appears_in.CartID
+    WHERE cart.CID=? AND cart.TStatus=?
+    """, (
+        session['cid'],
+        'Open',
+    ))
+    products = c.fetchall()
+    c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+    user = c.fetchone()
+    c.close()
+
+    # Compute the total price for each item.
+    for idx, prod in enumerate(products):
+        prod = dict(zip(prod.keys(), prod))
+        prod['Cost'] = prod['Quantity'] * prod['PriceSold']
+        products[idx] = prod
+
+    # Compute the total price of the purchase.
+    total = 0.0
+    for prod in products:
+        total += prod['Cost']
+
+    return render_template('customer/cart.html', prods=products, total=total,
+                           user=user)
+
+@customer_bp.route('/basket/<int:product_id>/add', methods=['GET'])
 def add_to_basket():
     pass
 
-@customer_bp.route('/basket/edit', methods=['POST'])
-def update_basket():
+@customer_bp.route('/basket/purchase', methods=['GET'])
+def purchase_basket():
+    pass
+
+@customer_bp.route('/basket/clear', methods=['GET'])
+def clear_basket():
+    pass
+
+@customer_bp.route('/basket/<int:product_id>/update', methods=['POST'])
+def update_basket_item(product_id):
+    pass
+
+@customer_bp.route('/basket/<int:product_id>/delete', methods=['POST'])
+def delete_basket_item(product_id):
     pass
 
 #-----------------------------

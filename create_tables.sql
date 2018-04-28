@@ -3,6 +3,8 @@
 -- CHANGES:
 --  - Removed Address from customer.
 --  - Changed CCAddress to CCZip in credit_card.
+--  - Allowed SAName and CCNumber to be NULL in cart when the cart is still
+--    active.
 --
 --============================
 
@@ -20,6 +22,7 @@ CREATE TABLE customer (
 CREATE TABLE silver_and_above (
   CID INTEGER PRIMARY KEY,
   CreditLine NUMERIC NOT NULL,
+  
   FOREIGN KEY(CID) REFERENCES customer(CID) ON DELETE CASCADE
 );
 
@@ -34,6 +37,7 @@ CREATE TABLE shipping_address (
   Zip TEXT NOT NULL,
   State TEXT NOT NULL,
   Country TEXT NOT NULL,
+  
   PRIMARY KEY(CID, SAName),
   FOREIGN KEY(CID) REFERENCES customer(CID) ON DELETE NO ACTION
 );
@@ -52,6 +56,7 @@ CREATE TABLE credit_card (
 CREATE TABLE stored_card (
   CCNumber TEXT PRIMARY KEY,
   CID INTEGER,
+  
   FOREIGN KEY(CCNumber) REFERENCES credit_card(CCNumber) ON DELETE CASCADE,
   FOREIGN KEY(CID) REFERENCES customer(CID) ON DELETE CASCADE
 );
@@ -60,10 +65,11 @@ CREATE TABLE stored_card (
 CREATE TABLE cart (
   CartID INTEGER PRIMARY KEY AUTOINCREMENT,
   CID NUMERIC NOT NULL,
-  SAName TEXT NOT NULL,
-  CCNumber TEXT NOT NULL,
+  SAName TEXT DEFAULT NULL,
+  CCNumber TEXT DEFAULT NULL,
   TStatus TEXT NOT NULL DEFAULT 'Open',
-  TDate NUMERIC,
+  TDate TEXT DEFAULT NULL,
+  
   FOREIGN KEY(CID, SAName) REFERENCES shipping_address(CID, SAName) ON DELETE NO ACTION,
   FOREIGN KEY(CCNumber) REFERENCES credit_card(CCNumber) ON DELETE NO ACTION
 );
@@ -84,6 +90,7 @@ CREATE TABLE appears_in (
   PID INTEGER NOT NULL,
   Quantity INTEGER NOT NULL,
   PriceSold NUMERIC NOT NULL,
+  
   PRIMARY KEY (CartID, PID),
   FOREIGN KEY(CartID) REFERENCES cart(CardID) ON DELETE NO ACTION,
   FOREIGN KEY(PID) REFERENCES product(PID) ON DELETE NO ACTION
@@ -93,6 +100,7 @@ CREATE TABLE appears_in (
 CREATE TABLE offer_product (
   PID INTEGER PRIMARY KEY,
   OfferPrice NUMERIC NOT NULL,
+  
   FOREIGN KEY(PID) REFERENCES product(PID) ON DELETE CASCADE
 );
 
@@ -100,6 +108,7 @@ CREATE TABLE offer_product (
 CREATE TABLE computer (
   PID INTEGER PRIMARY KEY,
   CPUType TEXT NOT NULL,
+  
   FOREIGN KEY(PID) REFERENCES product(PID) ON DELETE CASCADE
 );
 
@@ -108,6 +117,7 @@ CREATE TABLE laptop (
   PID INTEGER PRIMARY KEY,
   BType TEXT NOT NULL,
   Weight INTEGER NOT NULL,
+  
   FOREIGN KEY(PID) REFERENCES computer(PID) ON DELETE CASCADE
 );
 
@@ -116,5 +126,6 @@ CREATE TABLE printer (
   PID INTEGER PRIMARY KEY,
   PrinterType TEXT NOT NULL,
   Resolution INTEGER NOT NULL,
+  
   FOREIGN KEY(PID) REFERENCES product(PID) ON DELETE CASCADE
 );

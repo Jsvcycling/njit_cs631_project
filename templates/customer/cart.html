@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Cart</h1>
+
+  {% if not prods %}
+    <p>Your cart is currently empty.</p>
+  {% else %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-5" scope="col">Item</th>
+          <th class="col-2" scope="col">Quantity</th>
+          <th class="col-2" scope="col">Unit Cost</th>
+          <th class="col-2" nscope="col">Cost</th>
+          <th class="col-1" scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prod in prods %}
+          <tr>
+            <td>{{ prod.PName }}</td>
+            <td>
+              <form class="form-inline" method="POST" action="/basket/{{ prod.PID }}/update">
+                <input type="number" name="quantity" class="form-control col-4" value="{{ prod.Quantity }}">
+                &nbsp;
+                <button type="submit" class="btn btn-warning">Update</button>
+              </form>
+            </td>
+            <td>${{ prod.PriceSold }}</td>
+            <td>${{ prod.Cost }}</td>
+            <td>
+              <a class="btn btn-danger" href="/basket/{{ prod.PID }}/delete" role="button">Delete</a>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td></td>
+          <th>Total Cost</th>
+          <td>${{ total }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br />
+
+    <a class="btn btn-primary" href="/basket/purchase" scope="button">Purchase</a>
+    <a class="btn btn-danger" href="/basket/clear" scope="button">Clear Basket</a>
+  {% endif %}
+{% endblock %}
