@@ -428,13 +428,15 @@ def show_basket():
     # Compute the total price for each item.
     for idx, prod in enumerate(products):
         prod = dict(zip(prod.keys(), prod))
-        prod['Cost'] = prod['Quantity'] * prod['PriceSold']
+        prod['Cost'] = round(prod['Quantity'] * prod['PriceSold'], 2)
         products[idx] = prod
 
     # Compute the total price of the purchase.
     total = 0.0
     for prod in products:
         total += prod['Cost']
+
+    total = round(total, 2)
 
     return render_template('customer/cart.html', prods=products, addrs=addrs,
                            cards=cards, total=total, user=user)
@@ -444,6 +446,12 @@ def purchase_basket():
     if 'cid' not in session:
         flash('You must be authenticated to view that page.')
         return redirect('/login')
+
+    print(request.form['addr_name'])
+
+    if request.form['addr_name'] == '' or request.form['cc_number'] == '':
+        flash('Please select a shipping address and credit card')
+        return redirect('/basket')
 
     c = db.cursor()
     c.execute('SELECT CartID FROM cart WHERE CID=? AND TStatus=?', (

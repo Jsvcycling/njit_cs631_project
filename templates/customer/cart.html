@@ -43,16 +43,16 @@
 
     <form action="/basket/purchase" method="POST" class="form-inline">
       <select name="addr_name" class="form-control col-2" required>
-        <option>Select Address</option>
+        <option value="">Select Address</option>
         {% for addr in addrs %}
-          <option name="{{ addr.SAName }}">{{ addr.SAName }}</option>
+          <option value="{{ addr.SAName }}">{{ addr.SAName }}</option>
         {% endfor %}
       </select>
       &nbsp;
       <select name="cc_number" class="form-control col-2" required>
-        <option>Select Card</option>
+        <option value="">Select Card</option>
         {% for card in cards %}
-          <option name="{{ card.CCNumber }}">{{ card.CCNumber }}</option>
+          <option value="{{ card.CCNumber }}">{{ card.CCNumber }}</option>
         {% endfor %}
       </select>
       &nbsp;
