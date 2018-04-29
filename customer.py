@@ -466,7 +466,7 @@ def purchase_basket():
         request.form['addr_name'],
         request.form['cc_number'],
         'Purchased',
-        str(datetime.now()),
+        datetime.now().timestamp(),
         session['cid'],
         'Open',
     ))
@@ -631,8 +631,44 @@ def delete_basket_item(product_id):
 #-----------------------------
 @customer_bp.route('/orders', methods=['GET'])
 def list_orders():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    c = db.cursor()
+    c.execute("""
+    SELECT * FROM cart WHERE CID=? AND TStatus=? ORDER BY TDate DESC
+    """, (session['cid'], 'Purchased',))
+    orders = c.fetchall()
+    c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+    user = c.fetchone()
+
+    for idx, order in enumerate(orders):
+        order = dict(zip(order.keys(), order))
+        
+        c.execute('SELECT * FROM appears_in WHERE CartID=?', (
+            order['CartID'],
+        ))
+        prods = c.fetchall()
+
+        order_total = 0
+
+        for prod in prods:
+            order_total += prod['Quantity'] * prod['PriceSold']
+
+        order['TotalPrice'] = round(order_total, 2)
+        order['TDate'] = datetime.fromtimestamp(order['TDate']).strftime(
+            '%A %B %d, %Y %I:%M:%S %p'
+        )
+        orders[idx] = order
+
+    print(orders)
+
+    return render_template('customer/list_orders.html', orders=orders,
+                           user=user)
 
 @customer_bp.route('/orders/<int:order_id>', methods=['GET'])
 def show_order(order_id):
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')

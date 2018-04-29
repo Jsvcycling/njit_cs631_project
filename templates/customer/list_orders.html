@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Past Orders</h1>
+
+  <br />
+
+  {% if orders %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="col-4">Purchase Date</th>
+          <th scope="col" class="col-3">Shipping Address Name</th>
+          <th scope="col" class="col-3">Total Price</th>
+          <th scope="col" class="col-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+          <tr>
+            <td>{{ order.TDate }}</td>
+            <td>{{ order.SAName }}</td>
+            <td>${{ order.TotalPrice }}</td>
+            <td>
+              <a class="btn btn-primary" href="/orders/{{ order.CartID }}" role="button">View</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Sorry, you don't currently have any past orders.</p>
+  {% endif %}
+{% endblock %}
