@@ -495,7 +495,7 @@ def clear_basket():
 
     c.close()
 
-    flash('Cleared cart')
+    flash('Cleared cart.')
     return redirect('/basket')
 
 @customer_bp.route('/basket/<int:product_id>/add', methods=['GET'])
@@ -602,12 +602,27 @@ def update_basket_item(product_id):
     flash('Cart succesfully updated.')
     return redirect('/basket')
 
-@customer_bp.route('/basket/<int:product_id>/delete', methods=['POST'])
+@customer_bp.route('/basket/<int:product_id>/delete', methods=['GET'])
 def delete_basket_item(product_id):
     if 'cid' not in session:
         flash('You must be authenticated to view that page.')
         return redirect('/login')
-    pass
+
+    c = db.cursor()
+    c.execute('SELECT CartID FROM cart WHERE CID=? AND TStatus=?', (
+        session['cid'],
+        'Open',
+    ))
+    cart = c.fetchone()
+    c.execute('DELETE FROM appears_in WHERE CartID=? AND PID=?', (
+        cart['CartID'],
+        product_id,
+    ))
+    db.commit()
+    c.close()
+
+    flash('Successfully removed item from cart.')
+    return redirect('/basket')
 
 #-----------------------------
 #
