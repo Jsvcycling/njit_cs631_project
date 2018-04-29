@@ -1,0 +1,230 @@
+{% extends "layout.html" %}
+{% block content %}
+  
+<h1>Current Products</h1>
+
+  <br />
+
+  
+
+ <br /><br />
+
+    
+
+
+
+  {% if prodc && prodccl %}
+    <table class="table">
+      <thead>
+        <tr>
+ 
+         
+<th scope="col">ID</th>
+          
+<th scope="col">Type</th>
+          
+<th scope="col">Name</th>
+          
+<th scope="col">Price</th>
+         
+<th scope="col">Description</th>
+
+<th scope="col">Weight</th>
+         
+ <th scope="col">Quantity</th>
+               
+ </tr>
+      </thead>
+
+      <tbody>
+
+        
+          <tr>
+            
+<td>{{ prodc.PID }}</td>
+            
+<td>{{ prodccl.BType }}</td>
+           
+<td>{{ prodc.PName }}</td>
+            
+<td>{{ prodc.PPrice }}</td>
+            
+<td>{{ prodc.PDescription }}</td>
+<td>{{ prodccl.Weight }}</td>
+
+           
+ <td>{{ prodc.PQuantity }}</td>
+                      
+ <td>
+        
+<a class="btn btn-warning" href="/product_search" role="button">Search Again</a>
+              
+ </td>
+          </tr>
+           
+ </tbody>
+    </table>
+ 
+
+
+
+  {% else if prodc && prodcc %}
+    <table class="table">
+      <thead>
+        <tr>
+ 
+         
+<th scope="col">ID</th>
+          
+<th scope="col">Type</th>
+          
+<th scope="col">Name</th>
+          
+<th scope="col">Price</th>
+         
+<th scope="col">Description</th>
+        
+ <th scope="col">Quantity</th>
+               
+ </tr>
+      </thead>
+
+      <tbody>
+
+        
+          <tr>
+            
+<td>{{ prodc.PID }}</td>
+            
+<td>{{ prodcc.CPUType }}</td>
+           
+<td>{{ prodc.PName }}</td>
+            
+<td>{{ prodc.PPrice }}</td>
+            
+<td>{{ prodc.PDescription }}</td>          
+ <td>{{ prodc.PQuantity }}</td>
+                      
+ <td>
+        
+<a class="btn btn-warning" href="/product_search" role="button">Search Again</a>
+              
+ </td>
+          </tr>
+           
+ </tbody>
+    </table> 
+
+
+
+
+  {% else if prodc && prodcp %}
+    <table class="table">
+      <thead>
+        <tr>
+ 
+         
+<th scope="col">ID</th>
+          
+<th scope="col">Type</th>
+          
+<th scope="col">Name</th>
+          
+<th scope="col">Price</th>
+         
+<th scope="col">Description</th>
+
+<th scope="col">Resolution</th>
+         
+ <th scope="col">Quantity</th>
+               
+ </tr>
+      </thead>
+
+      <tbody>
+
+        
+          <tr>
+            
+<td>{{ prodc.PID }}</td>
+            
+<td>{{ prodcp.PrinterType }}</td>
+           
+<td>{{ prodc.PName }}</td>
+            
+<td>{{ prodc.PPrice }}</td>
+            
+<td>{{ prodc.PDescription }}</td>
+<td>{{ prodcp.Resolution }}</td>
+           
+ <td>{{ prodc.PQuantity }}</td>
+                      
+ <td>
+        
+<a class="btn btn-warning" href="/product_search" role="button">Search Again</a>
+              
+ </td>
+          </tr>
+           
+ </tbody>
+    </table>
+
+ 
+
+{% else if prodc%}
+    <table class="table">
+      <thead>
+        <tr>
+ 
+         
+<th scope="col">ID</th>
+          
+<th scope="col">Type</th>
+          
+<th scope="col">Name</th>
+          
+<th scope="col">Price</th>
+         
+ <th scope="col">Description</th>
+         
+ <th scope="col">Quantity</th>
+               
+ </tr>
+      </thead>
+
+      <tbody>
+
+        {% for prod in prodc %}
+
+          <tr>
+            
+<td>{{ prod.PID }}</td>
+            
+<td>{{ prod.PType }}</td>
+           
+<td>{{ prod.PName }}</td>
+            
+<td>{{ prod.PPrice }}</td>
+            
+<td>{{ prod.PDescription }}</td>
+           
+ <td>{{ prod.PQuantity }}</td>
+                      
+ <td>
+        
+<a class="btn btn-warning" href="/product/product_search" role="button">Search Again</a>
+              
+ </td>
+          </tr>
+        {% endfor %}
+     
+ </tbody>
+    </table>
+
+
+{% else %}
+    
+<p>Sorry, That product is not currently available.</p>
+  
+{% endif %}
+{% endblock %}
