@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, request, session, render_template, redirect, url_for, \
     flash
 
@@ -412,6 +414,13 @@ def show_basket():
         'Open',
     ))
     products = c.fetchall()
+    c.execute('SELECT * FROM shipping_address WHERE CID=?', (session['cid'],))
+    addrs = c.fetchall()
+    c.execute("""
+    SELECT * FROM credit_card JOIN stored_card USING (CCNumber)
+    WHERE CID=?
+    """, (session['cid'],))
+    cards = c.fetchall()
     c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
     user = c.fetchone()
     c.close()
@@ -427,12 +436,37 @@ def show_basket():
     for prod in products:
         total += prod['Cost']
 
-    return render_template('customer/cart.html', prods=products, total=total,
-                           user=user)
+    return render_template('customer/cart.html', prods=products, addrs=addrs,
+                           cards=cards, total=total, user=user)
 
-@customer_bp.route('/basket/purchase', methods=['GET'])
+@customer_bp.route('/basket/purchase', methods=['POST'])
 def purchase_basket():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    c = db.cursor()
+    c.execute('SELECT CartID FROM cart WHERE CID=? AND TStatus=?', (
+        session['cid'],
+        'Open',
+    ))
+    cart = c.fetchone()
+    c.execute("""
+    UPDATE cart SET SAName=?, CCNumber=?, TStatus=?, TDate=?
+    WHERE CID=? AND TStatus=?
+    """, (
+        request.form['addr_name'],
+        request.form['cc_number'],
+        'Purchased',
+        str(datetime.now()),
+        session['cid'],
+        'Open',
+    ))
+    db.commit()
+    c.close()
+
+    flash('Successfully purchased products.')
+    return redirect('/')
 
 @customer_bp.route('/basket/clear', methods=['GET'])
 def clear_basket():

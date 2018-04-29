@@ -41,9 +41,26 @@
       </tbody>
     </table>
 
+    <form action="/basket/purchase" method="POST" class="form-inline">
+      <select name="addr_name" class="form-control col-2" required>
+        <option>Select Address</option>
+        {% for addr in addrs %}
+          <option name="{{ addr.SAName }}">{{ addr.SAName }}</option>
+        {% endfor %}
+      </select>
+      &nbsp;
+      <select name="cc_number" class="form-control col-2" required>
+        <option>Select Card</option>
+        {% for card in cards %}
+          <option name="{{ card.CCNumber }}">{{ card.CCNumber }}</option>
+        {% endfor %}
+      </select>
+      &nbsp;
+      <button type="submit" class="btn btn-primary">Purchase</button>
+    </form>
+    
     <br />
-
-    <a class="btn btn-primary" href="/basket/purchase" scope="button">Purchase</a>
+    
     <a class="btn btn-danger" href="/basket/clear" scope="button">Clear Basket</a>
   {% endif %}
 {% endblock %}
