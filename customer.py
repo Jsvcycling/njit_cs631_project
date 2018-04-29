@@ -672,3 +672,31 @@ def show_order(order_id):
     if 'cid' not in session:
         flash('You must be authenticated to view that page.')
         return redirect('/login')
+    
+    c = db.cursor()
+    c.execute("""
+    SELECT * FROM product
+    JOIN appears_in ON product.PID = appears_in.PID
+    JOIN cart ON cart.CartID = appears_in.CartID
+    WHERE cart.CartID=?
+    """, (order_id,))
+    products = c.fetchall()
+    c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+    user = c.fetchone()
+    c.close()
+
+    # Compute the total price for each item.
+    for idx, prod in enumerate(products):
+        prod = dict(zip(prod.keys(), prod))
+        prod['Cost'] = round(prod['Quantity'] * prod['PriceSold'], 2)
+        products[idx] = prod
+
+    # Compute the total price of the purchase.
+    total = 0.0
+    for prod in products:
+        total += prod['Cost']
+
+    total = round(total, 2)
+
+    return render_template('customer/show_order.html', prods=products,
+                           total=total, user=user)

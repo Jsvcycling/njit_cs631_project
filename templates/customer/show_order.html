@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Order Review</h1>
+
+  <br />
+
+  {% if not prods %}
+    <p>The order could not be found.</p>
+  {% else %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-5" scope="col">Item</th>
+          <th class="col-2" scope="col">Quantity</th>
+          <th class="col-2" scope="col">Unit Cost</th>
+          <th class="col-2" nscope="col">Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prod in prods %}
+          <tr>
+            <td><a href="/products/{{ prod.PID }}">{{ prod.PName }}</a></td>
+            <td>{{ prod.Quantity }}</td>
+            <td>${{ prod.PriceSold }}</td>
+            <td>${{ prod.Cost }}</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td></td>
+          <th>Total Cost</th>
+          <td>${{ total }}</td>
+        </tr>
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}

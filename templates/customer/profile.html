@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
   <h1>Profile Information</h1>
+  
+  <br />
 
   <table class="table">
     <tbody>
@@ -23,13 +25,12 @@
     </tbody>
   </table>
 
-  <br /><br />
+  <br />
 
-  <a class="btn btn-outline-primary" href="/profile/addresses" role="button">Manage Shipping Addresses</a>
-  <a class="btn btn-outline-primary" href="/profile/cards" role="button">Manage Credit Cards</a>
-  
-  <br /><br />
-  
-  <a class="btn btn-outline-warning" href="/profile/update" role="button">Update Profile</a>
-  <a class="btn btn-outline-danger" href="/profile/delete" role="button">Delete Profile</a>
+  <a class="btn btn-success" href="/basket" role="button">Cart</a>
+  <a class="btn btn-primary" href="/orders" role="button">Past Orders</a>
+  <a class="btn btn-primary" href="/profile/addresses" role="button">Manage Shipping Addresses</a>
+  <a class="btn btn-primary" href="/profile/cards" role="button">Manage Credit Cards</a>
+  <a class="btn btn-warning" href="/profile/update" role="button">Update Profile</a>
+  <a class="btn btn-danger" href="/profile/delete" role="button">Delete Profile</a>
 {% endblock %}
