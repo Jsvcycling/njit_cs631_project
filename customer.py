@@ -430,24 +430,117 @@ def show_basket():
     return render_template('customer/cart.html', prods=products, total=total,
                            user=user)
 
-@customer_bp.route('/basket/<int:product_id>/add', methods=['GET'])
-def add_to_basket():
-    pass
-
 @customer_bp.route('/basket/purchase', methods=['GET'])
 def purchase_basket():
     pass
 
 @customer_bp.route('/basket/clear', methods=['GET'])
 def clear_basket():
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    c = db.cursor()
+    c.execute('SELECT CartID FROM cart WHERE CID=? AND TStatus=?', (
+        session['cid'],
+        'Open',
+    ))
+    cart = c.fetchone()
+
+    if cart:
+        c.execute('DELETE FROM appears_in WHERE CartID=?', (cart['CartID'],))
+        db.commit()
+
+    c.close()
+
+    flash('Cleared cart')
+    return redirect('/basket')
+
+@customer_bp.route('/basket/<int:product_id>/add', methods=['GET'])
+def add_to_basket(product_id):
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+
+    c = db.cursor()
+    c.execute('SELECT CartID FROM cart WHERE CID=? AND TStatus=?', (
+        session['cid'],
+        'Open',
+    ))
+    cart = c.fetchone()
+    c.execute('SELECT * FROM product WHERE PID=?', (product_id,))
+    prod = c.fetchone()
+
+    if not prod:
+        flash('Product not found.')
+        return redirect('/basket')
+
+    if not cart:
+        # Create a cart and get the cart id.
+        c.execute('INSERT INTO cart (CID) VALUES (?)', (session['cid'],))
+        db.commit()
+        c.execute('SELECT CartID FROM cart WHERE=? AND TStatus=?', (
+            session['cid'],
+            'Open',
+        ))
+        cart = c.fetchone()
+
+    cart_id = cart['CartID']
+
+    # Check to see if the item is already in the cart.
+    c.execute('SELECT * FROM appears_in WHERE CartID=? AND PID=?', (
+        cart_id,
+        product_id,
+    ))
+    prod_cart = c.fetchone()
+
+    if prod_cart:
+        # Item already in cart, increment quantity.
+        c.execute('UPDATE appears_in SET Quantity=? WHERE CartID=? AND PID=?', (
+            prod_cart['Quantity'] + 1,
+            cart_id,
+            product_id,
+        ))
+        db.commit()
+        c.close()
+
+        flash('Item already in basket. Incremented quantity.')
+        return redirect('/basket')
+
+    c.execute('SELECT * FROM offer_product WHERE PID=?', (product_id,))
+    offer = c.fetchone()
+    c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+    user = c.fetchone()
+
+    price_sold = prod['PPrice']
+
+    if user['Status'] == 'Gold' or user['Status'] == 'Platinum':
+        price_sold = offer['OfferPrice']
+
+    c.execute('INSERT INTO appears_in VALUES (?, ?, ?, ?)', (
+        cart_id,
+        product_id,
+        1,
+        price_sold,
+    ))
+    db.commit()
+    c.close()
+
+    flash('Item successfully added to cart.')
+    return redirect('/basket')
 
 @customer_bp.route('/basket/<int:product_id>/update', methods=['POST'])
 def update_basket_item(product_id):
-    pass
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
+    pass 
 
 @customer_bp.route('/basket/<int:product_id>/delete', methods=['POST'])
 def delete_basket_item(product_id):
+    if 'cid' not in session:
+        flash('You must be authenticated to view that page.')
+        return redirect('/login')
     pass
 
 #-----------------------------
