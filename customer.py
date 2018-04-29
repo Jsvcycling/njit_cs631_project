@@ -513,7 +513,7 @@ def add_to_basket(product_id):
         # Create a cart and get the cart id.
         c.execute('INSERT INTO cart (CID) VALUES (?)', (session['cid'],))
         db.commit()
-        c.execute('SELECT CartID FROM cart WHERE=? AND TStatus=?', (
+        c.execute('SELECT CartID FROM cart WHERE CID=? AND TStatus=?', (
             session['cid'],
             'Open',
         ))
@@ -568,7 +568,31 @@ def update_basket_item(product_id):
     if 'cid' not in session:
         flash('You must be authenticated to view that page.')
         return redirect('/login')
-    pass 
+
+    c = db.cursor()
+    c.execute('SELECT CartID FROM cart WHERE CID=? AND TStatus=?', (
+        session['cid'],
+        'Open',
+    ))
+    cart = c.fetchone()
+    c.execute('SELECT * FROM appears_in WHERE CartID=? AND PID=?', (
+        cart['CartID'],
+        product_id,
+    ))
+    prod_cart = c.fetchone()
+
+    if prod_cart:
+        c.execute('UPDATE appears_in SET Quantity=? WHERE CartID=? AND PID=?', (
+            request.form['quantity'],
+            cart['CartID'],
+            product_id,
+        ))
+        db.commit()
+        
+    c.close()
+
+    flash('Cart succesfully updated.')
+    return redirect('/basket')
 
 @customer_bp.route('/basket/<int:product_id>/delete', methods=['POST'])
 def delete_basket_item(product_id):

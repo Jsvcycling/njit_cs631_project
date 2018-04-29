@@ -21,7 +21,7 @@
             <td>{{ prod.PName }}</td>
             <td>
               <form class="form-inline" method="POST" action="/basket/{{ prod.PID }}/update">
-                <input type="number" name="quantity" class="form-control col-4" value="{{ prod.Quantity }}">
+                <input type="number" name="quantity" class="form-control col-4" min="1" value="{{ prod.Quantity }}">
                 &nbsp;
                 <button type="submit" class="btn btn-warning">Update</button>
               </form>
