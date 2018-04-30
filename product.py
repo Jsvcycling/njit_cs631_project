@@ -38,51 +38,21 @@ def list_products():
 
 @product_bp.route('/<int:product_id>', methods=['GET'])
 def show_product(product_id):
-    if request.method == 'GET':
-        return render_template('product/product_search.html')
-    else:
-        c = db.cursor()
-        c.execute("""
-            SELECT * FROM product
-            WHERE PID=? """, (
-            product_id)
-            , )
-        item = c.fetchone()
+    c = db.cursor()
+    c.execute("""
+    SELECT * FROM product
+    LEFT JOIN computer ON product.PID = computer.PID
+    LEFT JOIN laptop ON product.PID = laptop.PID
+    LEFT JOIN printer ON product.PID = printer.PID
+    WHERE product.PID=?
+    """, (product_id,))
+    prod = c.fetchone()
+    
+    user = None
 
-        # check if item is a laptop
-        c = db.cursor()
-        c.execute("""
-            SELECT * FROM laptop
-            WHERE PID=? """, (
-            product_id)
-            , )
-        itemlp = c.fetchone()
+    if 'cid' in session:
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user = c.fetchone()
 
-        # check if item is a printer
-        c = db.cursor()
-        c.execute("""
-                  SELECT * FROM printer
-                  WHERE PID=? """, (
-            product_id)
-                  , )
-        itempr = c.fetchone()
-
-        # check if item is a computer
-        c = db.cursor()
-        c.execute("""
-                  SELECT * FROM computer
-                  WHERE PID=? """, (
-            product_id)
-                  , )
-
-        itemcmp = c.fetchone()
-        c.close()
-        # depending on type of product, return different template
-        if itemlp:
-            return render_template('product/product_results.html', prodccl=itemlp, prodc=item)
-        elif itemcmp:
-            render_template('product/product_results.html', prodcc=itemcmp, prodc=item)
-        elif itempr:
-            render_template('product/product_results.html', prodcp=itempr, prodc=item)
-        else:
-            return render_template('product/product_results.html', prodc=item)
+    c.close()
+    return render_template('product/show_product.html', prod=prod, user=user)

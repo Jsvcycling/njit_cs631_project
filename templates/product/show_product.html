@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block content %}
+  {% if prod %}
+    <h1>{{ prod.PName }}</h1>
+    
+    <br />
+
+    <p>{{ prod.PDescription }}</p>
+
+    <br />
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <th scope="row" class="col-3">Type:</th>
+          <td>{{ prod.PType }}</td>
+        </tr>
+        {% if prod.PType == 'Computer' or prod.PType == 'Laptop' %}
+          <tr>
+            <th scope="row">CPU Type:</th>
+            <td>{{ prod.CPUType }}</td>
+          </tr>
+        {% endif %}
+        {% if prod.PType == 'Laptop' %}
+          <tr>
+            <th scope="row">Battery Type:</th>
+            <td>{{ prod.BType }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Weight:</th>
+            <td>{{ prod.Weight }} lbs.</td>
+          </tr>
+        {% endif %}
+        {% if prod.PType == 'Printer' %}
+          <tr>
+            <th scope="row">Printer Type:</th>
+            <td>{{ prod.PrinterType }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Resolution:</th>
+            <td>{{ prod.Resolution }}</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    <br />
+
+    <a class="btn btn-primary" href="/basket/{{ prod.PID }}/add" role="button">Add to Cart</a>
+  {% else %}
+    <br />
+    <p>Sorry, that product does not exist.</p>
+  {% endif %}
+
+  
+{% endblock %}
