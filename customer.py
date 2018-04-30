@@ -18,7 +18,11 @@ def index():
     user = None
     if 'cid' in session:
         c = db.cursor()
-        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        c.execute("""
+        SELECT * FROM customer c
+        LEFT JOIN shipping_address s ON c.CID = s.CID AND c.Address = s.SAName
+        WHERE c.CID=?
+        """, (session['cid'],))
         user = c.fetchone()
         c.close()
 
@@ -97,16 +101,7 @@ def show_profile():
         flash('You must be authenticated to view that page.')
         return redirect('/login')
 
-    c = db.cursor()
-    c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
-    user = c.fetchone()
-    c.close()
-
-    if not user:
-        flash('An internal error occurred.')
-        return redirect('/')
-
-    return render_template('customer/profile.html', user=user)
+    return redirect('/')
 
 @customer_bp.route('/profile/update', methods=['GET', 'POST'])
 def update_profile():
@@ -117,7 +112,7 @@ def update_profile():
     if request.method == 'GET':
         c = db.cursor()
         c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
-        user=c.fetchone()
+        user = c.fetchone()
         c.close()
 
         if not user:
