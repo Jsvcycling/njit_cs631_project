@@ -1,7 +1,6 @@
 --============================
 --
 -- CHANGES:
---  - Removed Address from customer.
 --  - Changed CCAddress to CCZip in credit_card.
 --  - Allowed SAName and CCNumber to be NULL in cart when the cart is still
 --    active.
@@ -14,8 +13,11 @@ CREATE TABLE customer (
   FName TEXT NOT NULL,
   LName TEXT NOT NULL,
   Email TEXT UNIQUE NOT NULL,
+  Address TEXT DEFAULT NULL,
   Phone TEXT DEFAULT '',
-  Status TEXT DEFAULT 'Regular'
+  Status TEXT DEFAULT 'Regular',
+
+  FOREIGN KEY(CID, Address) REFERENCES shipping_address(CID, SAName) ON DELETE SET NULL
 );
 
 -- SILVER_AND_ABOVE table.
