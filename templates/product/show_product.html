@@ -41,6 +41,18 @@
             <td>{{ prod.Resolution }}</td>
           </tr>
         {% endif %}
+        <tr>
+          <th scope="row">Price:</th>
+          <td>
+            {% if user and user.Status >= 2 %}
+              <strike>${{ prod.PPrice }}</strike>
+              &nbsp;
+              ${{ prod.OfferPrice }}
+            {% else %}
+              {{ prod.PPrice }}
+            {% endif %}
+          </td>
+        </tr>
       </tbody>
     </table>
 

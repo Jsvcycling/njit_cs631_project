@@ -4,6 +4,8 @@
 --  - Changed CCAddress to CCZip in credit_card.
 --  - Allowed SAName and CCNumber to be NULL in cart when the cart is still
 --    active.
+--  - Status in user is an integer value (0 = Regular, 1 = Silver, 2 = Gold,
+--    3 = Platinum).
 --
 --============================
 
@@ -15,7 +17,7 @@ CREATE TABLE customer (
   Email TEXT UNIQUE NOT NULL,
   Address TEXT DEFAULT NULL,
   Phone TEXT DEFAULT '',
-  Status TEXT DEFAULT 'Regular',
+  Status INTEGER DEFAULT 0,
 
   FOREIGN KEY(CID, Address) REFERENCES shipping_address(CID, SAName) ON DELETE SET NULL
 );

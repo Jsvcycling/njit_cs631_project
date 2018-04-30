@@ -1,8 +1,8 @@
 -- CUSTOMER sample data.
 INSERT INTO customer VALUES
-  (1, 'Juana', 'Smith', 'juana.smith@example.com', NULL, '9735555555', 'Regular'),
-  (2, 'Joseph', 'Cowen', 'joseph.cowen@example.com', NULL, '2015555555', 'Regular'),
-  (3, 'Anita', 'Boudreaux', 'anita.bourdreaux@example.com', NULL, '8625555555', 'Silver');
+  (1, 'Juana', 'Smith', 'juana.smith@example.com', NULL, '9735555555', 3),
+  (2, 'Joseph', 'Cowen', 'joseph.cowen@example.com', NULL, '2015555555', 0),
+  (3, 'Anita', 'Boudreaux', 'anita.bourdreaux@example.com', NULL, '8625555555', 1);
 
 -- SILVER_AND_ABOVE sample data.
 INSERT INTO silver_and_above VALUES
@@ -35,6 +35,8 @@ INSERT INTO appears_in VALUES
   (1, 1, 1, 1299.99);
 
 -- OFFER_PRODUCT sample data.
+INSERT INTO offer_product VALUES
+  (1, 999.99);
 
 -- COMPUTER sample data.
 INSERT INTO computer VALUES

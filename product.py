@@ -20,18 +20,22 @@ def list_products():
 
     if len(q) > 0:
         # Bad idea. Doesn't protect against SQL injection.
-        c.execute('SELECT * FROM product WHERE PName LIKE \'%{}%\''.format(q))
+        c.execute("""
+        SELECT * FROM product
+        LEFT JOIN offer_product USING (PID)
+        WHERE product.PName LIKE \'%{}%\'
+        """.format(q))
         prods = c.fetchall()
     else:
-        c.execute('SELECT * FROM product')
+        c.execute("""
+        SELECT * FROM product
+        LEFT JOIN offer_product USING (PID)
+        """)
         prods = c.fetchall()
 
     if 'cid' in session:
         c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
         user = c.fetchone()
-
-    # TODO: If the user exists and they are Gold or Platinum status, show the
-    #       discounted price (e.g. cross out original price).
 
     c.close()
     return render_template('product/list_products.html', prods=prods, user=user, q=q)
@@ -41,6 +45,7 @@ def show_product(product_id):
     c = db.cursor()
     c.execute("""
     SELECT * FROM product
+    LEFT JOIN offer_product ON product.PID = offer_product.PID
     LEFT JOIN computer ON product.PID = computer.PID
     LEFT JOIN laptop ON product.PID = laptop.PID
     LEFT JOIN printer ON product.PID = printer.PID
