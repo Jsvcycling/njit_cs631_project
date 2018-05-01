@@ -213,6 +213,18 @@ def avg_price():
                                      '%d/%m/%Y %H:%M:%S %p').timestamp()
 
     c = db.cursor()
+    c.execute("""
+    SELECT p.PID AS PID, p.PName AS PName,
+    SUM(a.OrderCost) / SUM(a.Quantity) AS AvgPrice,
+    a.OrderCost AS OrderCost, a.Quantity AS Quantityb
+    FROM product p
+    JOIN (SELECT CartID, PID, Quantity * PriceSold AS OrderCost, Quantity
+    FROM appears_in) a ON a.PID = p.PID
+    JOIN cart c ON a.CartID = c.CartID
+    WHERE c.TDate > ? AND c.TDate < ? AND c.TStatus = ?
+    GROUP BY p.PID, p.PName
+    """, (start_time, end_time, 'Purchased',))
+    prods = c.fetchall()
 
     user = None
 
@@ -222,5 +234,14 @@ def avg_price():
 
     c.close()
 
-    return render_template('statistics/avg_price.html', user=user,
+    for idx, prod in enumerate(prods):
+        prod = dict(zip(prod.keys(), prod))
+        prod['AvgPrice'] = round(prod['AvgPrice'], 2)
+        prods[idx] = prod
+
+    prods.sort(key=operator.itemgetter('AvgPrice'), reverse=True)
+        
+    print(prods)
+
+    return render_template('statistics/avg_price.html', user=user, prods=prods,
                            start_time=start_time_str, end_time=end_time_str)
