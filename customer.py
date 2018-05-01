@@ -564,7 +564,7 @@ def add_to_basket(product_id):
 
     price_sold = prod['PPrice']
 
-    if user['Status'] == 'Gold' or user['Status'] == 'Platinum':
+    if user['Status'] >= 2 and offer:
         price_sold = offer['OfferPrice']
 
     c.execute('INSERT INTO appears_in VALUES (?, ?, ?, ?)', (
@@ -669,8 +669,6 @@ def list_orders():
             '%A %B %d, %Y %I:%M:%S %p'
         )
         orders[idx] = order
-
-    print(orders)
 
     return render_template('customer/list_orders.html', orders=orders,
                            user=user)

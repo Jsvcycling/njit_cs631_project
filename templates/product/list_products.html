@@ -28,7 +28,7 @@
             <td>{{ prod.PType }}</td>
             <td>{{ prod.PDescription }}</td>
             <td>
-              {% if user and user.Status >= 2 %}
+              {% if user and user.Status >= 2 and prod.OfferPrice %}
                 <strike>${{ prod.PPrice }}</strike>
                 &nbsp;
                 ${{ prod.OfferPrice }}

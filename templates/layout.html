@@ -6,6 +6,7 @@
     <title>Newark-IT</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css">
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -19,8 +20,17 @@
             <li class="nav-item">
               <a class="nav-link" href="/products">Products</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/statistics">Statistics</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="statsDropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Statistics
+              </a>
+              <div class="dropdown-menu" aria-labelledby="statsDropdownLink">
+                <a class="dropdown-item" href="/statistics/most_freq">Most Frequently Sold Products</a>
+                <a class="dropdown-item" href="/statistics/most_unique">Most Unique Customers by Product</a>
+                <a class="dropdown-item" href="/statistics/best_customers">Best Customers (in Money Spent)</a>
+                <a class="dropdown-item" href="/statistics/best_zipcodes">Best ZIP Codes (in Shipments)</a>
+                <a class="dropdown-item" href="/statistics/avg_price">Average Selling Price by Product</a>
+              </div>
             </li>
           </ul>
           <ul class="navbar-nav ml-auto">
@@ -33,10 +43,10 @@
               </li>
             {% else %}
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="profileDropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {{ user['FName'] }} {{ user['LName'] }}
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <div class="dropdown-menu" aria-labelledby="profileDropdownLink">
                   <a class="dropdown-item" href="/profile">Profile</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="/basket">View Cart</a>

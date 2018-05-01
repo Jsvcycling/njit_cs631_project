@@ -28,7 +28,8 @@ INSERT INTO cart VALUES
 
 -- PRODUCT sample data.
 INSERT INTO product VALUES
-  (1, 'Laptop', 'Dell XPS 13', 1299.99, 'A lightweight laptop from Dell.', 10);
+  (1, 'Laptop', 'Dell XPS 13', 1299.99, 'A lightweight laptop from Dell.', 10),
+  (2, 'Computer', 'Dell Optiplex', 899.99, 'A small desktop from Dell.', 10);
 
 -- APPEARS_IN sample data.
 INSERT INTO appears_in VALUES
@@ -40,7 +41,8 @@ INSERT INTO offer_product VALUES
 
 -- COMPUTER sample data.
 INSERT INTO computer VALUES
-  (1, 'Intel i7');
+  (1, 'Intel i7'),
+  (2, 'Intel i7');
 
 -- LAPTOP sample data.
 INSERT INTO laptop VALUES
