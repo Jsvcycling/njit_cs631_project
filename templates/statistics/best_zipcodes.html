@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h1>Most Popular ZIP Codes by Shipment Count</h1>
+
+  <br />
+  
+  <form method="GET" class="form-inline">
+    <input type="text" name="start_time" class="form-control col-3" placeholder="DD/MM/YYYY HH:MM:SS AM" value="{{ start_time }}">
+    &nbsp;
+    to
+    &nbsp;
+    <input type="text" name="end_time" class="form-control col-3" placeholder="DD/MM/YYYY HH:MM:SS AM" value="{{ end_time }}">
+    &nbsp;
+    <button type="submit" class="btn btn-primary">Query by Time Period</button>
+  </form>
+
+  <br />
+
+  {% if zips %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ZIP Code</th>
+          <th scope="col">Shipments</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for zip in zips %}
+          <tr>
+            <td>{{ zip.Zip }}</td>
+            <td>{{ zip.NumShip }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Sorry, no shipments could be found in that timeframe.</p>
+  {% endif %}
+{% endblock %}

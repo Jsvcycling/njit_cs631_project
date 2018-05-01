@@ -107,13 +107,74 @@ def most_unique_sold():
                            prods=prods, start_time=start_time_str,
                            end_time=end_time_str)
 
-@statistics_bp.route('/best_customers')
+@statistics_bp.route('/best_customers', methods=['GET'])
 def best_customers():
-    pass
+    start_time = 0
+    end_time = datetime.now().timestamp()
 
-@statistics_bp.route('/best_zipcodes')
+    start_time_str = request.args.get('start_time', '', type=str)
+    end_time_str   = request.args.get('end_time', '', type=str)
+
+    if len(start_time_str) > 0:
+        start_time = datetime.strptime(start_time_str,
+                                       '%d/%m/%Y %H:%M:%S %p').timestamp()
+
+    if len(end_time_str) > 0:
+        end_time = datetime.strptime(end_time_str,
+                                     '%d/%m/%Y %H:%M:%S %p').timestamp()
+
+    c = db.cursor()
+
+    user = None
+
+    if 'cid' in session:
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user = c.fetchone()
+
+    c.close()
+
+    return render_template('statistics/best_customers.html', user=user,
+                           start_time=start_time_str, end_time=end_time_str)
+
+@statistics_bp.route('/best_zipcodes', methods=['GET'])
 def best_zipcodes():
-    pass
+    start_time = 0
+    end_time = datetime.now().timestamp()
+
+    start_time_str = request.args.get('start_time', '', type=str)
+    end_time_str   = request.args.get('end_time', '', type=str)
+
+    if len(start_time_str) > 0:
+        start_time = datetime.strptime(start_time_str,
+                                       '%d/%m/%Y %H:%M:%S %p').timestamp()
+
+    if len(end_time_str) > 0:
+        end_time = datetime.strptime(end_time_str,
+                                     '%d/%m/%Y %H:%M:%S %p').timestamp()
+
+    c = db.cursor()
+    c.execute("""
+    SELECT s.Zip AS Zip, COUNT(c.CartID) AS NumShip FROM shipping_address s
+    JOIN cart c ON c.CID = s.CID AND c.SAName = s.SAName
+    WHERE c.TDate > ? AND c.TDate < ? AND c.TStatus = ?
+    GROUP BY s.Zip LIMIT 10
+    """, (start_time, end_time, 'Purchased',))
+    zips = c.fetchall()
+
+    user = None
+
+    if 'cid' in session:
+        c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
+        user = c.fetchone()
+
+    c.close()
+
+    zips.sort(key=operator.itemgetter('NumShip'), reverse=True)
+
+    print(zips)
+
+    return render_template('statistics/best_zipcodes.html', user=user, zips=zips,
+                           start_time=start_time_str, end_time=end_time_str)
 
 @statistics_bp.route('/avg_price')
 def avg_price():
