@@ -5,8 +5,6 @@ INSERT INTO customer VALUES
   (3, 'Anita', 'Boudreaux', 'anita.bourdreaux@example.com', NULL, '8625555555', 1);
 
 -- SILVER_AND_ABOVE sample data.
-INSERT INTO silver_and_above VALUES
-  (3, '10000');
 
 -- SHIPPING_ADDRESS sample data.
 INSERT INTO shipping_address VALUES
