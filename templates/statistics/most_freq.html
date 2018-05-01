@@ -3,6 +3,18 @@
   <h1>Most Frequently Sold Products</h1>
 
   <br />
+  
+  <form method="GET" class="form-inline">
+    <input type="text" name="start_time" class="form-control col-3" placeholder="DD/MM/YYYY HH:MM:SS AM" value="{{ start_time }}">
+    &nbsp;
+    to
+    &nbsp;
+    <input type="text" name="end_time" class="form-control col-3" placeholder="DD/MM/YYYY HH:MM:SS AM" value="{{ end_time }}">
+    &nbsp;
+    <button type="submit" class="btn btn-primary">Query by Time Period</button>
+  </form>
+
+  <br />
 
   {% if prods %}
     <table class="table">
@@ -22,6 +34,6 @@
       </tbody>
     </table>
   {% else %}
-    <p>Sorry, no products have been sold.</p>
+    <p>Sorry, no products could be found in that timeframe.</p>
   {% endif %}
 {% endblock %}

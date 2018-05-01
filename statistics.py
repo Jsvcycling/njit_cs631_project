@@ -19,12 +19,15 @@ def most_freq_sold():
     start_time = 0
     end_time = datetime.now().timestamp()
 
-    if 'start_time' in request.args:
-        start_time = datetime.strptime(request.args.get('start_time'),
+    start_time_str = request.args.get('start_time', '', type=str)
+    end_time_str   = request.args.get('end_time', '', type=str)
+
+    if len(start_time_str) > 0:
+        start_time = datetime.strptime(start_time_str,
                                        '%d/%m/%Y %H:%M:%S %p').timestamp()
 
-    if 'end_time' in request.args:
-        end_time = datetime.strptime(request.args.get('end_time'),
+    if len(end_time_str) > 0:
+        end_time = datetime.strptime(end_time_str,
                                      '%d/%m/%Y %H:%M:%S %p').timestamp()
 
     c = db.cursor()
@@ -52,7 +55,8 @@ def most_freq_sold():
 
     print(prods)
 
-    return render_template('statistics/most_freq.html', user=user, prods=prods)
+    return render_template('statistics/most_freq.html', user=user, prods=prods,
+                           start_time=start_time_str, end_time=end_time_str)
         
 @statistics_bp.route('/most_unique')
 def most_unique_sold():
