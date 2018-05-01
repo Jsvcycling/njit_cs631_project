@@ -8,19 +8,29 @@
     <tbody>
       <tr>
         <th scope="row">Name:</th>
-        <td>{{ user['FName'] }} {{ user['LName'] }}</td>
+        <td>{{ user.FName }} {{ user.LName }}</td>
       </tr>
       <tr>
         <th scope="row">Email:</th>
-        <td>{{ user['Email'] }}</td>
+        <td>{{ user.Email }}</td>
       </tr>
       <tr>
         <th scope="row">Phone:</th>
-        <td>{{ user['Phone'] }}</td>
+        <td>{{ user.Phone }}</td>
       </tr>
       <tr>
-        <th scope="row">Class:</th>
-        <td>{{ user['Status'] }}</td>
+        <th scope="row">Level:</th>
+        <td>{{ user.Level }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Primary Address:</th>
+        <td>
+          {% if user.Address %}
+            {{ user.Address }} ({{ user.SNumber }} {{ user.Street }}, {{ user.City }}, {{ user.State }} {{ user.Zip }}, {{ user.Country }})
+          {% else %}
+            A primary address has not been set.
+          {% endif %}
+        </td>
       </tr>
     </tbody>
   </table>

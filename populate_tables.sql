@@ -1,6 +1,6 @@
 -- CUSTOMER sample data.
 INSERT INTO customer VALUES
-  (1, 'Juana', 'Smith', 'juana.smith@example.com', NULL, '9735555555', 3),
+  (1, 'Juana', 'Smith', 'juana.smith@example.com', 'Home', '9735555555', 3),
   (2, 'Joseph', 'Cowen', 'joseph.cowen@example.com', NULL, '2015555555', 0),
   (3, 'Anita', 'Boudreaux', 'anita.bourdreaux@example.com', NULL, '8625555555', 1);
 

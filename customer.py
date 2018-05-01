@@ -26,6 +26,13 @@ def index():
         user = c.fetchone()
         c.close()
 
+    user = dict(zip(user.keys(), user))
+
+    if user['Status'] == 0: user['Level'] = 'Regular'
+    if user['Status'] == 1: user['Level'] = 'Silver'
+    if user['Status'] == 2: user['Level'] = 'Gold'
+    if user['Status'] == 3: user['Level'] = 'Platinum'
+
     if user:
         return render_template('customer/profile.html', user=user)
         
@@ -113,25 +120,31 @@ def update_profile():
         c = db.cursor()
         c.execute('SELECT * FROM customer WHERE CID=?', (session['cid'],))
         user = c.fetchone()
+        c.execute('SELECT * FROM shipping_address WHERE CID=?', (
+            session['cid'],
+        ))
+        addrs = c.fetchall()
         c.close()
 
         if not user:
             flash('An internal error occured.')
             return redirect('/')
         
-        return render_template('customer/update.html', user=user)
+        return render_template('customer/update.html', user=user, addrs=addrs)
     else:
         c = db.cursor()
         c.execute("""
-        UPDATE customer SET FName=?, LName=?, Email=?, Phone=?
+        UPDATE customer SET FName=?, LName=?, Email=?, Phone=?, Address=?
         WHERE CID=?
         """, (
             request.form['first_name'],
             request.form['last_name'],
             request.form['email'],
             request.form['phone'],
+            request.form['primary_addr'],
             session['cid'],
         ))
+            
         db.commit()
         c.close()
 

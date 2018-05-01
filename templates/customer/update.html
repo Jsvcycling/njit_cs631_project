@@ -25,6 +25,20 @@
       <input type="text" name="phone" id="phone" class="form-control col-4" value="{{ user['Phone'] }}">
     </div>
 
+    <div class="form-group row">
+      <label for="primary_addr" class="col-2">Primary Address</label>
+      <select name="primary_addr" id="primary_addr" class="form-control col-4">
+        <option value="">Select Address</option>
+        {% for addr in addrs %}
+          {% if user.Address == addr.SAName %}
+            <option value="{{ addr.SAName }}" selected>{{ addr.SAName }}</option>
+          {% else %}
+            <option value="{{ addr.SAName }}">{{ addr.SAName }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
     <button type="submit" class="btn btn-primary">Update</button>
   </form>
 {% endblock %}
