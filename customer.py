@@ -26,14 +26,14 @@ def index():
         user = c.fetchone()
         c.close()
 
-    user = dict(zip(user.keys(), user))
-
-    if user['Status'] == 0: user['Level'] = 'Regular'
-    if user['Status'] == 1: user['Level'] = 'Silver'
-    if user['Status'] == 2: user['Level'] = 'Gold'
-    if user['Status'] == 3: user['Level'] = 'Platinum'
-
     if user:
+        user = dict(zip(user.keys(), user))
+
+        if user['Status'] == 0: user['Level'] = 'Regular'
+        if user['Status'] == 1: user['Level'] = 'Silver'
+        if user['Status'] == 2: user['Level'] = 'Gold'
+        if user['Status'] == 3: user['Level'] = 'Platinum'
+        
         return render_template('customer/profile.html', user=user)
         
     return render_template('customer/index.html')
