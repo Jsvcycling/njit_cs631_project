@@ -16,21 +16,24 @@
 
   <br />
 
-  <p>Sorry, this feature is not yet implemented...</p>
-  {# <table class="table"> #}
-  {#   <thead> #}
-  {#     <tr> #}
-  {#       <th scope="col">Item Name</th> #}
-  {#       <th scope="col">Quantity Sold</th> #}
-  {#     </tr> #}
-  {#   </thead> #}
-  {#   <tbody> #}
-  {#     {% for prod in prods %} #}
-  {#       <tr> #}
-  {#         <td><a href="/products/{{ prod.PID }}">{{ prod.PName }}</a></td> #}
-  {#         <td>{{ prod.NumCust }}</td> #}
-  {#       </tr> #}
-  {#     {% endfor %} #}
-  {#   </tbody> #}
-  {# </table> #}
+  {% if custs %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Item Name</th>
+          <th scope="col">Quantity Sold</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cust in custs %}
+          <tr>
+            <td>{{ cust.FName }} {{ cust.LName }}</td>
+            <td>${{ cust.TotalPrice }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Sorry, ...</p>
+  {% endif %}
 {% endblock %}
