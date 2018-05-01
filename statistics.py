@@ -177,7 +177,7 @@ def best_zipcodes():
     SELECT s.Zip AS Zip, COUNT(c.CartID) AS NumShip FROM shipping_address s
     JOIN cart c ON c.CID = s.CID AND c.SAName = s.SAName
     WHERE c.TDate > ? AND c.TDate < ? AND c.TStatus = ?
-    GROUP BY s.Zip LIMIT 10
+    GROUP BY s.Zip LIMIT 5
     """, (start_time, end_time, 'Purchased',))
     zips = c.fetchall()
 
